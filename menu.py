@@ -12,6 +12,10 @@ def draw_menu():
     button_width = 150
     button_height = 50
 
+    header = font.render("Cookie Clicker", False, WHITE)
+    header_rect = header.get_rect(center=(screen_width / 2, 50))
+    screen.blit(header, header_rect)
+
     for option in options:
         x_position = screen_width / 2 - button_width / 2
 
@@ -25,5 +29,9 @@ def draw_menu():
         buttons.append(button_rect)
 
         y_position += 100
+
+    footer = font.render("Made by: CuTGuArDiAn Studios", False, WHITE)
+    footer_rect = footer.get_rect(center=(screen_width / 2, 500))
+    screen.blit(footer, footer_rect)
 
     return buttons
