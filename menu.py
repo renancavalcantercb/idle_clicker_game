@@ -9,9 +9,13 @@ def draw_menu():
 
     buttons = []
     y_position = 150
+    button_width = 150
+    button_height = 50
 
     for option in options:
-        button_rect = pygame.Rect(screen_width / 2 - 50, y_position, 100, 50)
+        x_position = screen_width / 2 - button_width / 2
+
+        button_rect = pygame.Rect(x_position, y_position, button_width, button_height)
         pygame.draw.rect(screen, BLUE, button_rect)
 
         text = font.render(option, True, WHITE)
