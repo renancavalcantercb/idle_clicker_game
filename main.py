@@ -13,8 +13,8 @@ PURPLE = (128, 0, 128)
 
 # Game Variables
 money = 0
-screen_width = 800
-screen_height = 450
+screen_width = 360
+screen_height = 640
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Money Clicker")
@@ -44,6 +44,15 @@ class Button:
                 20,
             )
             pygame.draw.rect(screen, self.color, prog_rect)
+
+    def draw_level(self, screen, font):
+        if self.button_color in autoclickers:
+            level = autoclickers[self.button_color].level
+            level_text = font.render(f"{level}", True, WHITE)
+
+            text_rect = level_text.get_rect(center=(self.pos[0], self.pos[1]))
+
+            screen.blit(level_text, text_rect)
 
     def update(self):
         if self.is_loading and self.progress < self.max_progress:
@@ -94,19 +103,19 @@ class AutoClicker:
 
 
 buttons = [
-    Button(GREEN, (30, 50), 1, 'green'),
-    Button(BLUE, (30, 100), 2, 'blue'),
-    Button(ORANGE, (30, 150), 3, 'orange'),
-    Button(RED, (30, 200), 4, 'red'),
-    Button(PURPLE, (30, 250), 5, 'purple'),
+    Button(GREEN, (30, 50), 1, "green"),
+    Button(BLUE, (30, 100), 2, "blue"),
+    Button(ORANGE, (30, 150), 3, "orange"),
+    Button(RED, (30, 200), 4, "red"),
+    Button(PURPLE, (30, 250), 5, "purple"),
 ]
 
 autoclickers = {
-    'green': AutoClicker('green', cost=50, rate=1),
-    'blue': AutoClicker('blue', cost=100, rate=2),
-    'orange': AutoClicker('orange', cost=200, rate=3),
-    'red': AutoClicker('red', cost=400, rate=4),
-    'purple': AutoClicker('purple', cost=800, rate=5),
+    "green": AutoClicker("green", cost=50, rate=1),
+    "blue": AutoClicker("blue", cost=100, rate=2),
+    "orange": AutoClicker("orange", cost=200, rate=3),
+    "red": AutoClicker("red", cost=400, rate=4),
+    "purple": AutoClicker("purple", cost=800, rate=5),
 }
 
 
@@ -116,12 +125,29 @@ def draw_money():
 
 
 def draw_shop():
-    x = screen_width / 2
-    y = 50
+    x = 10
+    y = screen_height - 300
+    button_height = 30
+    button_width = 200
+
     for color, autoclicker in autoclickers.items():
-        shop_text = font.render(f"{color.capitalize()} Autoclick: ${autoclicker.cost} [LVL: {autoclicker.level}]", True, WHITE)
-        screen.blit(shop_text, (x, y))
-        y += 30
+        if money >= autoclicker.cost:
+            button_color = GREEN
+        else:
+            button_color = RED
+
+        button_rect = pygame.Rect(x, y, button_width, button_height)
+        pygame.draw.rect(screen, button_color, button_rect, 2)
+
+        shop_text = font.render(
+            f"{color.capitalize()} Autoclick: ${autoclicker.cost}",
+            True,
+            WHITE,
+        )
+        text_rect = shop_text.get_rect(center=button_rect.center)
+        screen.blit(shop_text, text_rect)
+
+        y += 40
 
 
 running = True
@@ -131,10 +157,19 @@ while running:
 
     for button in buttons:
         button.draw(screen)
+        button.draw_level(screen, font)
         button.update()
 
     for button_color, autoclicker in autoclickers.items():
-        autoclicker.update(buttons[buttons.index(next(filter(lambda b: b.button_color == button_color, buttons), None))])
+        autoclicker.update(
+            buttons[
+                buttons.index(
+                    next(
+                        filter(lambda b: b.button_color == button_color, buttons), None
+                    )
+                )
+            ]
+        )
 
     draw_money()
     draw_shop()
@@ -149,13 +184,12 @@ while running:
                 if button.clicked(mouse_pos):
                     button.start_loading()
 
-            x = screen_width / 2
-            y = 50
+            y = screen_height - 300
             for color, autoclicker in autoclickers.items():
-                shop_item_rect = pygame.Rect(x, y, 300, 30)
+                shop_item_rect = pygame.Rect(10, y, 200, 30)
                 if shop_item_rect.collidepoint(mouse_pos):
                     autoclicker.buy()
-                y += 30
+                y += 40
 
     pygame.display.flip()
 
