@@ -1,4 +1,6 @@
 import json
+import config
+from autoclickers import autoclickers
 
 
 def save_game(money, autoclickers):
@@ -14,12 +16,11 @@ def save_game(money, autoclickers):
         json.dump(game_data, file)
 
 
-def load_game(autoclickers):
-    global money
+def load_game():
     try:
         with open("savegame.json", "r") as file:
             game_data = json.load(file)
-            money = game_data["money"]
+            config.game_money = game_data["money"]
             for color, data in game_data["autoclickers"].items():
                 autoclickers[color].cost = data["cost"]
                 autoclickers[color].level = data["level"]
@@ -27,5 +28,3 @@ def load_game(autoclickers):
         print("Save file not found. Starting a new game.")
     except json.JSONDecodeError:
         print("Error decoding the save file. Possible corrupted file.")
-
-    return money, autoclickers
