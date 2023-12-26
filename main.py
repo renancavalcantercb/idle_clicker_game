@@ -1,5 +1,6 @@
 import pygame
 from menu import draw_menu
+from utils import save_game, load_game
 
 pygame.init()
 
@@ -125,6 +126,11 @@ def draw_money():
     screen.blit(money_text, (10, screen_height - 50))
 
 
+def draw_save():
+    save_text = font.render(f"Save", True, WHITE)
+    screen.blit(save_text, (screen_width - 65, screen_height - 50))
+
+
 def draw_shop():
     x = 10
     y = screen_height - 300
@@ -169,7 +175,8 @@ while running:
                         if i == 0:
                             menu_active = False
                         if i == 1:
-                            pass
+                            money, autoclickers = load_game(autoclickers)
+                            menu_active = False
                         if i == 2:
                             running = False
 
@@ -196,6 +203,10 @@ while running:
 
         draw_money()
         draw_shop()
+        draw_save()
+        save_button_rect = pygame.Rect(screen_width - 65, screen_height - 50, 60, 30)
+        if save_button_rect.collidepoint(mouse_pos):
+            save_game(money, autoclickers)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
