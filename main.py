@@ -98,10 +98,13 @@ class AutoClicker:
     def update(self, button):
         if self.level > 0:
             button.progress += self.rate * self.level
+            if not button.is_loading:
+                button.start_loading()
             if button.progress >= button.max_progress:
                 global money
                 money += button.get_value()
                 button.progress = 0
+                button.is_loading = False
 
 
 buttons = [
