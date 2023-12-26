@@ -17,9 +17,9 @@ python3 main.py
 ## Features
 - Collect coins by clicking on the coin
 - Buy upgrades to collect coins automatically
+- Save and load game
 
 ## Upcoming features
-- Save and load game
 - More upgrades
 - More items to buy
 - Statistics
